@@ -1,6 +1,6 @@
 {
   "name": "react-native-logo-animation",
-  "version": "0.1.0",
+  "version": "1.0.3",
   "description": "React Native Logo Animation",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
