@@ -3,6 +3,7 @@ import { View, Dimensions, StyleSheet } from 'react-native';
 import { Svg } from 'react-native-svg';
 import {
   Easing,
+  runOnJS,
   useSharedValue,
   withRepeat,
   withTiming,
@@ -20,7 +21,8 @@ interface Props {
   strokeWidth: number;
   strokeColor: string;
   animatedStrokeColor: string;
-  isRepeat: boolean;
+  isRepeat?: boolean;
+  isAnimationFinished?: (event: boolean) => void;
 }
 
 const AnimatedLogo = ({
@@ -33,12 +35,18 @@ const AnimatedLogo = ({
   strokeColor,
   animatedStrokeColor,
   isRepeat = false,
+  isAnimationFinished,
 }: Props) => {
   const width = Dimensions.get('window').width - 64;
   const height = (width * vHeight + margin) / (vWidth + margin);
 
   const progress = useSharedValue(0);
 
+  const animationFinished = (isFinished: boolean) => {
+    if (isRepeat === false) {
+      isAnimationFinished?.(isFinished);
+    }
+  };
   React.useEffect(() => {
     progress.value = isRepeat
       ? withRepeat(
@@ -49,10 +57,17 @@ const AnimatedLogo = ({
           -1,
           true
         )
-      : withTiming(1, {
-          duration,
-          easing: Easing.inOut(Easing.ease),
-        });
+      : withTiming(
+          1,
+          {
+            duration,
+            easing: Easing.inOut(Easing.ease),
+          },
+          () => {
+            runOnJS(animationFinished)(true);
+          }
+        );
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [progress]);
 
