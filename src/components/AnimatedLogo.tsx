@@ -17,6 +17,7 @@ interface Props {
   paths: string[];
   vWidth: number;
   vHeight: number;
+  scale: number;
   duration: number;
   strokeWidth: number;
   strokeColor: string;
@@ -30,6 +31,7 @@ const AnimatedLogo = ({
   paths,
   vWidth,
   vHeight,
+  scale,
   duration,
   strokeWidth,
   strokeColor,
@@ -37,8 +39,8 @@ const AnimatedLogo = ({
   isRepeat = false,
   isAnimationFinished,
 }: Props) => {
-  const width = Dimensions.get('window').width - 64;
-  const height = (width * vHeight + margin) / (vWidth + margin);
+  const width = (Dimensions.get('window').width - 64) * scale;
+  const height = ((width * vHeight + margin) / (vWidth + margin)) * scale;
 
   const progress = useSharedValue(0);
 
